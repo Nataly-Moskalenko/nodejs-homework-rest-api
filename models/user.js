@@ -41,9 +41,17 @@ const loginSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
 });
 
+const updateSubscriptionSchema = Joi.object({
+  subscription: Joi.string()
+    .required()
+    .valid('starter', 'pro', 'business')
+    .error(new Error('Missing field subscription')),
+});
+
 const schemas = {
   registerSchema,
   loginSchema,
+  updateSubscriptionSchema,
 };
 
 const User = model('user', userSchema);
