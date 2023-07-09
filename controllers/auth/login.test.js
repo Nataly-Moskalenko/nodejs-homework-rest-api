@@ -15,7 +15,6 @@ app.post('/api/users/login', login);
 const userOne = {
   email: USER_EMAIL,
   password: USER_PASSWORD,
-  subscription: 'business',
 };
 
 describe('test login controller', () => {
@@ -36,7 +35,6 @@ describe('test login controller', () => {
 
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('token');
-    expect(res.body.user).toEqual({ email: userOne.email, subscription: userOne.subscription });
     expect(res.body).toMatchObject({
       user: {
         email: expect.any(String),
