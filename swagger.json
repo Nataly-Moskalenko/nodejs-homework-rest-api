@@ -27,108 +27,215 @@
       "name": "authorization"
     }
   },
+
   "paths": {
     "/api/users/register": {
       "post": {
-        "summary": "Register user",
+        "summary": "User registration",
         "tags": ["Users"],
-        "description": "Register user in system",
+        "description": "User registration in system",
         "parameters": [
           {
             "name": "user",
             "in": "body",
-            "description": "Register user",
+            "description": "User registration",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/RegisterUser"
             }
           }
         ],
         "produces": ["application/json"],
         "responses": {
-          "200": {
-            "description": "Register Success",
+          "201": {
+            "description": "User created, registration successful",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/RegisterSuccess"
             }
           },
-          "401": {
-            "description": "Register details are not valid!!"
+          "400": {
+            "description": "Bad request"
           },
-          "404": {
-            "description": "Email is not registered!"
-          },
-          "500": {
-            "description": "User register failed!!"
+          "409": {
+            "description": "Conflict"
           }
         }
       }
     },
+
     "/api/users/login": {
       "post": {
-        "summary": "Login user",
+        "summary": "User login",
         "tags": ["Users"],
-        "description": "Login user in system",
+        "description": "User login in system",
         "parameters": [
           {
             "name": "user",
             "in": "body",
-            "description": "Login user",
+            "description": "User login",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/LoginUser"
             }
           }
         ],
         "produces": ["application/json"],
         "responses": {
           "200": {
-            "description": "Login Success",
+            "description": "Login Successful",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/LoginSuccess"
             }
           },
+          "400": {
+            "description": "Bad request"
+          },
           "401": {
-            "description": "Login details are not valid!!"
-          },
-          "404": {
-            "description": "Email is not registered!"
-          },
-          "500": {
-            "description": "User login failed!!"
+            "description": "Not authorized"
           }
         }
       }
     },
+
     "/api/users/logout": {
       "post": {
-        "summary": "Login user",
+        "summary": "User logout",
         "tags": ["Users"],
-        "description": "Login user in system",
+        "description": "User logout",
         "parameters": [
           {
             "name": "user",
             "in": "body",
-            "description": "Login user",
+            "description": "User logout",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/UserId"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Logout Successful, No content"
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        }
+      }
+    },
+
+    "/api/users/verify/:verificationToken": {
+      "get": {
+        "summary": "User verification",
+        "tags": ["Users"],
+        "description": "User verification",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User verification",
+            "schema": {
+              "$ref": "#/definitions/Verify"
             }
           }
         ],
         "produces": ["application/json"],
         "responses": {
           "200": {
-            "description": "Login Success",
+            "description": "Verification successful",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/Verify"
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+
+    "/api/users/current": {
+      "get": {
+        "summary": "Current user",
+        "tags": ["Users"],
+        "description": "Current user",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Current user",
+            "schema": {
+              "$ref": "#/definitions/CurrentUser"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Get current user successful",
+            "schema": {
+              "$ref": "#/definitions/CurrentUser"
             }
           },
           "401": {
-            "description": "Login details are not valid!!"
+            "description": "Not authorized"
+          }
+        }
+      }
+    },
+
+    "/api/users": {
+      "patch": {
+        "summary": "Subscription updating",
+        "tags": ["Users"],
+        "description": "Subscription updating",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Subscription updating",
+            "schema": {
+              "$ref": "#/definitions/UserId"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Subscription updated successful",
+            "schema": {
+              "$ref": "#/definitions/UpdateSubscription"
+            }
           },
           "404": {
-            "description": "Email is not registered!"
+            "description": "User not found"
+          }
+        }
+      }
+    },
+
+    "/api/users/avatars": {
+      "patch": {
+        "summary": "Avatar updating",
+        "tags": ["Users"],
+        "description": "Avatar updating",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Avatar updating",
+            "schema": {
+              "$ref": "#/definitions/UserId"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Avatar updated successful",
+            "schema": {
+              "$ref": "#/definitions/UpdateAvatar"
+            }
           },
-          "500": {
-            "description": "User login failed!!"
+          "404": {
+            "description": "User not found"
           }
         }
       }
@@ -138,19 +245,84 @@
   "definitions": {
     "User": {
       "properties": {
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        }
+        "email": { "type": "string" },
+        "password": { "type": "string" },
+        "subscription": { "type": "string" },
+        "verify": { "type": "string" },
+        "verificationToken": { "type": "string" },
+        "avatarURL": { "type": "string" }
       }
     },
-    "userEmail": {
+
+    "RegisterUser": {
       "properties": {
-        "email": {
-          "type": "string"
-        }
+        "email": { "type": "string" },
+        "password": { "type": "string" },
+        "subscription": { "type": "string" }
+      }
+    },
+
+    "RegisterSuccess": {
+      "properties": {
+        "email": { "type": "string" },
+        "subscription": { "type": "string" }
+      }
+    },
+
+    "LoginUser": {
+      "properties": {
+        "email": { "type": "string" },
+        "password": { "type": "string" }
+      }
+    },
+
+    "LoginSuccess": {
+      "properties": {
+        "email": { "type": "string" },
+        "subscription": { "type": "string" }
+      }
+    },
+
+    "CurrentUser": {
+      "properties": {
+        "email": { "type": "string" },
+        "subscription": { "type": "string" }
+      }
+    },
+
+    "UpdateSubscription": {
+      "properties": {
+        "_id": { "type": "string" },
+        "subscription": { "type": "string" }
+      }
+    },
+
+    "UpdateAvatar": {
+      "properties": {
+        "_id": { "type": "string" },
+        "avatarURL": { "type": "string" }
+      }
+    },
+
+    "UserId": {
+      "properties": {
+        "_id": { "type": "string" }
+      }
+    },
+
+    "Verify": {
+      "properties": {
+        "verificationToken": { "type": "string" }
+      }
+    },
+
+    "Contact": {
+      "properties": {
+        "email": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "favorite": { "type": "boolean" },
+        "owner": { "type": "string" }
       }
     }
   }
