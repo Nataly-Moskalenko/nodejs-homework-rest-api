@@ -49,7 +49,7 @@
           "201": {
             "description": "User created, registration successful",
             "schema": {
-              "$ref": "#/definitions/RegisterSuccess"
+              "$ref": "#/definitions/CurrentUser"
             }
           },
           "400": {
@@ -73,7 +73,7 @@
             "in": "body",
             "description": "User login",
             "schema": {
-              "$ref": "#/definitions/LoginUser"
+              "$ref": "#/definitions/CurrentUser"
             }
           }
         ],
@@ -82,7 +82,7 @@
           "200": {
             "description": "Login Successful",
             "schema": {
-              "$ref": "#/definitions/LoginSuccess"
+              "$ref": "#/definitions/CurrentUser"
             }
           },
           "400": {
@@ -239,6 +239,200 @@
           }
         }
       }
+    },
+
+    "/api/contacts/": {
+      "get": {
+        "summary": "Get all contacts",
+        "tags": ["Contacts"],
+        "description": "All contacts",
+        "parameters": [
+          {
+            "name": "contact",
+            "in": "body",
+            "description": "All contacts",
+            "schema": {
+              "$ref": "#/definitions/Contact"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "All contacts",
+            "schema": {
+              "$ref": "#/definitions/Contact"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+
+    "/api/contacts/:contactId/": {
+      "get": {
+        "summary": "Get contact by Id",
+        "tags": ["Contacts"],
+        "description": "Get contact by Id",
+        "parameters": [
+          {
+            "name": "contact",
+            "in": "body",
+            "description": "Get contact by Id",
+            "schema": {
+              "$ref": "#/definitions/ContactId"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "All contacts",
+            "schema": {
+              "$ref": "#/definitions/Contact"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+
+    "/api/contacts": {
+      "post": {
+        "summary": "Add contact",
+        "tags": ["Contacts"],
+        "description": "Add contact",
+        "parameters": [
+          {
+            "name": "contact",
+            "in": "body",
+            "description": "Add contact",
+            "schema": {
+              "$ref": "#/definitions/Contact"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Add contact",
+            "schema": {
+              "$ref": "#/definitions/Contact"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+
+    "/api/contacts/:contactID": {
+      "delete": {
+        "summary": "Delete contact",
+        "tags": ["Contacts"],
+        "description": "Delete contact",
+        "parameters": [
+          {
+            "name": "contact",
+            "in": "body",
+            "description": "Delete contact",
+            "schema": {
+              "$ref": "#/definitions/ContactId"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Contact deleted"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+
+    "/api/contacts/:contactId": {
+      "put": {
+        "summary": "Update contact",
+        "tags": ["Contacts"],
+        "description": "Update contact",
+        "parameters": [
+          {
+            "name": "contact",
+            "in": "body",
+            "description": "Update contact",
+            "schema": {
+              "$ref": "#/definitions/ContactId"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Update contact",
+            "schema": {
+              "$ref": "#/definitions/Contact"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+
+    "/api/contacts/:contactId/favorite": {
+      "patch": {
+        "summary": "Update status contact",
+        "tags": ["Contacts"],
+        "description": "Update status contact",
+        "parameters": [
+          {
+            "name": "contact",
+            "in": "body",
+            "description": "Update status contact",
+            "schema": {
+              "$ref": "#/definitions/ContactId"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Update status contact",
+            "schema": {
+              "$ref": "#/definitions/FavoriteContact"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
     }
   },
 
@@ -258,27 +452,6 @@
       "properties": {
         "email": { "type": "string" },
         "password": { "type": "string" },
-        "subscription": { "type": "string" }
-      }
-    },
-
-    "RegisterSuccess": {
-      "properties": {
-        "email": { "type": "string" },
-        "subscription": { "type": "string" }
-      }
-    },
-
-    "LoginUser": {
-      "properties": {
-        "email": { "type": "string" },
-        "password": { "type": "string" }
-      }
-    },
-
-    "LoginSuccess": {
-      "properties": {
-        "email": { "type": "string" },
         "subscription": { "type": "string" }
       }
     },
@@ -323,6 +496,18 @@
         "phone": { "type": "string" },
         "favorite": { "type": "boolean" },
         "owner": { "type": "string" }
+      }
+    },
+
+    "ContactId": {
+      "properties": {
+        "id": { "type": "string" }
+      }
+    },
+
+    "FavoriteContact": {
+      "properties": {
+        "favorite": { "type": "boolean" }
       }
     }
   }
