@@ -1,14 +1,16 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.1",
   "info": {
-    "version": "1.0.0",
-    "title": "Nodejs Rest App API",
-    "description": "Find out how your APIs work",
+    "version": "2.0.2",
+    "title": "Swagger Nodejs Rest Api",
+    "description": "Showing off Nodejs rest Api work",
     "license": {
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     }
   },
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
   "servers": [{ "url": "https://nodejs-rest-api-ry5x.onrender.com" }],
   "tags": [
     {
@@ -20,45 +22,43 @@
       "description": "Contacts endpoints"
     }
   ],
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
-  "securityDefinitions": {
-    "JWT": {
-      "type": "apiKey",
-      "in": "header",
-      "name": "access_token"
-    }
-  },
-
+  
   "paths": {
     "/api/users/register": {
       "post": {
         "summary": "User registration",
         "tags": ["Users"],
         "description": "User registration in system",
-        "parameters": [
-          {
-            "name": "user",
-            "in": "body",
-            "description": "User registration",
-            "schema": {
-              "$ref": "#/definitions/RegistrationRequest"
+        "parameters": [],
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
             }
           }
-        ],
-        "produces": ["application/json"],
+        },       
         "responses": {
           "201": {
             "description": "User created, registration successful",
-            "schema": {
-              "$ref": "#/definitions/RegistrationResponse"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
             }
           },
           "400": {
-            "description": "Bad request"
-          },
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },          
           "409": {
-            "description": "Conflict"
+            "description": "Conflict (Provided email already exists)",
+            "content": {}
           }
         }
       }
@@ -69,29 +69,36 @@
         "summary": "User login",
         "tags": ["Users"],
         "description": "User login in system",
-        "parameters": [
-          {
-            "name": "user",
-            "in": "body",
-            "description": "User login",
-            "schema": {
-              "$ref": "#/definitions/LoginRequest"
+        "parameters": [],
+        "requestBody": {
+          "description": "Login's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
             }
           }
-        ],
-        "produces": ["application/json"],
+        },
         "responses": {
           "200": {
-            "description": "Login Successful",
-            "schema": {
-              "$ref": "#/definitions/LoginResponse"
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {}
           },
-          "401": {
-            "description": "Not authorized"
+          "404": {
+            "description": "Not found",
+            "content": {}
           }
         }
       }
@@ -102,67 +109,43 @@
         "summary": "User logout",
         "tags": ["Users"],
         "description": "User logout",
-        "security": [{ "JWT": [] }],
+        "security": [{ "Bearer": [] }],
         "parameters": [],
         "responses": {
           "204": {
-            "description": "Logout Successful, No content"
+            "description": "Logout Successful, No content",
+            "content": {}
           },
           "401": {
-            "description": "Not authorized"
+            "description": "Not authorized",
+            "content": {}
           }
         }
       }
-    },
-
-    "/api/users/verify/:verificationToken": {
-      "get": {
-        "summary": "User verification",
-        "tags": ["Users"],
-        "description": "User verification",
-        "security": [{ "JWT": [] }],
-        "parameters": [
-          {
-            "name": "user",
-            "in": "body",
-            "description": "User verification",
-            "schema": {
-              "$ref": "#/definitions/Verify"
-            }
-          }
-        ],
-        "produces": ["application/json"],
-        "responses": {
-          "200": {
-            "description": "Verification successful",
-            "schema": {
-              "$ref": "#/definitions/Verify"
-            }
-          },
-          "404": {
-            "description": "User not found"
-          }
-        }
-      }
-    },
+    },    
 
     "/api/users/current": {
       "get": {
         "summary": "Current user",
         "tags": ["Users"],
         "description": "Current user",
-        "security": [{ "JWT": [] }],
+        "security": [{ "Bearer": [] }],
         "parameters": [],
         "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "Get current user successful",
-            "schema": {
-              "$ref": "#/definitions/CurrentUserResponse"
-            }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserResponse"
+                }
+              }
+            }            
           },
           "401": {
-            "description": "Not authorized"
+            "description": "Not authorized",
+            "content": {}
           }
         }
       }
@@ -173,27 +156,33 @@
         "summary": "Subscription updating",
         "tags": ["Users"],
         "description": "Subscription updating",
-        "security": [{ "JWT": [] }],
-        "parameters": [
-          {
-            "name": "user",
-            "in": "body",
-            "description": "Subscription updating",
-            "schema": {
-              "$ref": "#/definitions/UpdateSubscriptionRequest"
+        "security": [{ "Bearer": [] }],
+        "parameters": [],
+        "requestBody": {
+          "description": "Subscription updating",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSubscriptionRequest"
+              }
             }
           }
-        ],
-        "produces": ["application/json"],
+        },
         "responses": {
           "200": {
             "description": "Subscription updated successful",
-            "schema": {
-              "$ref": "#/definitions/UpdateSubscriptionResponse"
-            }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateSubscriptionResponse"
+                }
+              }
+            }            
           },
           "404": {
-            "description": "User not found"
+            "description": "User not found",
+            "content": {}
           }
         }
       }
@@ -204,27 +193,33 @@
         "summary": "Avatar updating",
         "tags": ["Users"],
         "description": "Avatar updating",
-        "security": [{ "JWT": [] }],
-        "parameters": [
-          {
-            "name": "user",
-            "in": "body",
-            "description": "Avatar updating",
-            "schema": {
-              "$ref": "#/definitions/UpdateAvatarRequest"
+        "security": [{ "Bearer": [] }],
+        "parameters": [],
+        "requestBody": {
+          "description": "Avatar updating",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAvatarRequest"
+              }
             }
           }
-        ],
-        "produces": ["application/json"],
+        },
         "responses": {
           "200": {
             "description": "Avatar updated successful",
-            "schema": {
-              "$ref": "#/definitions/UpdateAvatarRequest"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAvatarResponse"
+                }
+              }
             }
           },
           "404": {
-            "description": "User not found"
+            "description": "User not found",
+            "content": {}
           }
         }
       }
@@ -235,21 +230,26 @@
         "summary": "Get all contacts",
         "tags": ["Contacts"],
         "description": "All contacts",
-        "security": [{ "JWT": [] }],
-        "parameters": [],
-        "produces": ["application/json"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [],        
         "responses": {
           "200": {
             "description": "All contacts",
-            "schema": {
-              "$ref": "#/definitions/Contact"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {}
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {}
           }
         }
       },
@@ -257,30 +257,37 @@
         "summary": "Add contact",
         "tags": ["Contacts"],
         "description": "Add contact",
-        "security": [{ "JWT": [] }],
-        "parameters": [
-          {
-            "name": "contact",
-            "in": "body",
-            "description": "Add contact",
-            "schema": {
-              "$ref": "#/definitions/Contact"
+        "security": [{ "Bearer": [] }],
+        "parameters": [],
+        "requestBody": {
+          "description": "Add contact",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Contact"
+              }
             }
           }
-        ],
-        "produces": ["application/json"],
+        },
         "responses": {
           "200": {
             "description": "Add contact",
-            "schema": {
-              "$ref": "#/definitions/Contact"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {}
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {}
           }
         }
       }
@@ -291,21 +298,26 @@
         "summary": "Get contact by Id",
         "tags": ["Contacts"],
         "description": "Get contact by Id",
-        "security": [{ "JWT": [] }],
-        "parameters": [],
-        "produces": ["application/json"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [],       
         "responses": {
           "200": {
             "description": "All contacts",
-            "schema": {
-              "$ref": "#/definitions/Contact"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {}
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {}
           }
         }
       },
@@ -313,17 +325,20 @@
         "summary": "Delete contact",
         "tags": ["Contacts"],
         "description": "Delete contact",
-        "security": [{ "JWT": [] }],
+        "security": [{ "Bearer": [] }],
         "parameters": [],
         "responses": {
           "204": {
-            "description": "Contact deleted"
+            "description": "Contact deleted",
+            "content": {}
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {}
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {}
           }
         }
       },
@@ -331,30 +346,37 @@
         "summary": "Update contact",
         "tags": ["Contacts"],
         "description": "Update contact",
-        "security": [{ "JWT": [] }],
-        "parameters": [
-          {
-            "name": "contact",
-            "in": "body",
-            "description": "Update contact",
-            "schema": {
-              "$ref": "#/definitions/ContactId"
+        "security": [{ "Bearer": [] }],
+        "parameters": [],
+        "requestBody": {
+          "description": "Update contact",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Contact"
+              }
             }
           }
-        ],
-        "produces": ["application/json"],
+        },
         "responses": {
           "200": {
             "description": "Update contact",
-            "schema": {
-              "$ref": "#/definitions/Contact"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {}
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {}
           }
         }
       }
@@ -365,243 +387,259 @@
         "summary": "Update status contact",
         "tags": ["Contacts"],
         "description": "Update status contact",
-        "security": [{ "JWT": [] }],
-        "parameters": [
-          {
-            "name": "contact",
-            "in": "body",
-            "description": "Update status contact",
-            "schema": {
-              "$ref": "#/definitions/ContactId"
+        "security": [{ "Bearer": [] }],
+        "parameters": [],
+        "requestBody": {
+          "description": "Update status contact",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Contact"
+              }
             }
           }
-        ],
-        "produces": ["application/json"],
+        },        
         "responses": {
           "200": {
             "description": "Update status contact",
-            "schema": {
-              "$ref": "#/definitions/FavoriteContact"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {}
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {}
           }
         }
       }
     }
   },
 
-  "definitions": {
-    "User": {
-      "properties": {
-        "email": { "type": "string" },
-        "password": { "type": "string" },
-        "subscription": { "type": "string" },
-        "verify": { "type": "string" },
-        "verificationToken": { "type": "string" },
-        "avatarURL": { "type": "string" }
+  "components": {
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     },
+    "schemas": {
+      "User": {
+        "properties": {
+          "email": { "type": "string" },
+          "password": { "type": "string" },
+          "subscription": { "type": "string" },
+          "verify": { "type": "string" },
+          "verificationToken": { "type": "string" },
+          "avatarURL": { "type": "string" }
+        }
+      },
 
-    "RegistrationRequest": {
-      "type": "object",
-      "required": ["name", "email", "password"],
-      "properties": {
-        "email": {
-          "type": "string",
-          "description": "User's email. It must contain only Latin letters; may include numbers, letters in different case",
-          "format": "email",
-          "example": "mango@email.com"
-        },
-        "password": {
-          "type": "string",
-          "description": "User's password. It must contain only Latin letters; may contain numbers, signs, letters in different case; does not contain a space.",
-          "example": "Mango12378"
+      "RegistrationRequest": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email. It must contain only Latin letters; may include numbers, letters in different case",
+            "format": "email",
+            "example": "mango@email.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password. It must contain only Latin letters; may contain numbers, signs, letters in different case; does not contain a space.",
+            "example": "Mango12378"
+          }
         }
-      }
-    },
-    "RegistrationResponse": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string",
-          "description": "User's email",
-          "format": "email",
-          "example": "mango@email.com"
-        },
-        "subscription": {
-          "type": "string",
-          "description": "User's subscription",
-          "example": "starter"
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email",
+            "example": "mango@email.com"
+          },
+          "subscription": {
+            "type": "string",
+            "description": "User's subscription",
+            "example": "starter"
+          }
         }
-      }
-    },
-    "LoginRequest": {
-      "type": "object",
-      "required": ["email", "password"],
-      "properties": {
-        "email": {
-          "type": "string",
-          "description": "User's email.  It must contain only Latin letters; may include numbers, letters in different case",
-          "format": "email",
-          "example": "mango@email.com"
-        },
-        "password": {
-          "type": "string",
-          "description": "User's password. It must contain only Latin letters, at least one uppercase, lowercase letter and a number; does not contain a space",
-          "example": "Mango12378"
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email.  It must contain only Latin letters; may include numbers, letters in different case",
+            "format": "email",
+            "example": "zirdekoltu@gufum.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password. It must contain only Latin letters, at least one uppercase, lowercase letter and a number; does not contain a space",
+            "example": "krasota"
+          }
         }
-      }
-    },
-    "LoginResponse": {
-      "type": "object",
-      "properties": {
-        "accessToken": {
-          "type": "string",
-          "description": "User's token",
-          "format": "Bearer Token"
-        },
-        "user": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string",
-              "description": "User's email",
-              "format": "email",
-              "example": "mango@email.com"
-            },
-            "subscription": {
-              "type": "string",
-              "description": "User's subscription",
-              "example": "starter"
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "User's token",
+            "format": "Bearer Token"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email",
+                "example": "mango@email.com"
+              },
+              "subscription": {
+                "type": "string",
+                "description": "User's subscription",
+                "example": "starter"
+              }
             }
           }
         }
-      }
-    },
-    "CurrentUserResponse": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string",
-          "description": "User's email",
-          "format": "email",
-          "example": "mango@email.com"
-        },
-        "subscription": {
-          "type": "string",
-          "description": "User's subscription",
-          "example": "starter"
+      },
+      "CurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email",
+            "example": "mango@email.com"
+          },
+          "subscription": {
+            "type": "string",
+            "description": "User's subscription",
+            "example": "starter"
+          }
         }
-      }
-    },
-    "UpdateSubscriptionRequest": {
-      "type": "object",
-      "required": ["subscription"],
-      "properties": {
-        "subscription": {
-          "type": "string",
-          "description": "User's subscription. Subscription field must be one of the next value - starter, pro or business",
-          "enum": ["starter", "pro", "business"],
-          "example": "pro"
+      },
+      "UpdateSubscriptionRequest": {
+        "type": "object",
+        "required": ["subscription"],
+        "properties": {
+          "subscription": {
+            "type": "string",
+            "description": "User's subscription. Subscription field must be one of the next value - starter, pro or business",
+            "enum": ["starter", "pro", "business"],
+            "example": "pro"
+          }
         }
-      }
-    },
-    "UpdateSubscriptionResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string",
-          "description": "User's subscription",
-          "example": "pro"
+      },
+      "UpdateSubscriptionResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "User's subscription",
+            "example": "pro"
+          }
         }
-      }
-    },
-    "UpdateAvatarRequest": {
-      "type": "object",
-      "required": ["avatarURL"],
-      "properties": {
-        "avatarURL": {
-          "type": "string",
-          "description": "User's avatar"
+      },
+      "UpdateAvatarRequest": {
+        "type": "object",
+        "required": ["avatarURL"],
+        "properties": {
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar"
+          }
         }
-      }
-    },
-    "UpdateAvatarResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string",
-          "description": "User's avatar",
-          "example": "Avatar changed"
+      },
+      "UpdateAvatarResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "User's avatar",
+            "example": "Avatar changed"
+          }
         }
-      }
-    },
+      },
 
-    "RegisterUser": {
-      "properties": {
-        "email": { "type": "string" },
-        "password": { "type": "string" },
-        "subscription": { "type": "string" }
-      }
-    },
+      "RegisterUser": {
+        "properties": {
+          "email": { "type": "string" },
+          "password": { "type": "string" },
+          "subscription": { "type": "string" }
+        }
+      },
 
-    "CurrentUser": {
-      "properties": {
-        "email": { "type": "string" },
-        "subscription": { "type": "string" }
-      }
-    },
+      "CurrentUser": {
+        "properties": {
+          "email": { "type": "string" },
+          "subscription": { "type": "string" }
+        }
+      },
 
-    "UpdateSubscription": {
-      "properties": {
-        "_id": { "type": "string" },
-        "subscription": { "type": "string" }
-      }
-    },
+      "UpdateSubscription": {
+        "properties": {
+          "_id": { "type": "string" },
+          "subscription": { "type": "string" }
+        }
+      },
 
-    "UpdateAvatar": {
-      "properties": {
-        "_id": { "type": "string" },
-        "avatarURL": { "type": "string" }
-      }
-    },
+      "UpdateAvatar": {
+        "properties": {
+          "_id": { "type": "string" },
+          "avatarURL": { "type": "string" }
+        }
+      },
 
-    "UserId": {
-      "properties": {
-        "_id": { "type": "string" }
-      }
-    },
+      "UserId": {
+        "properties": {
+          "_id": { "type": "string" }
+        }
+      },
 
-    "Verify": {
-      "properties": {
-        "verificationToken": { "type": "string" }
-      }
-    },
+      "Verify": {
+        "properties": {
+          "verificationToken": { "type": "string" }
+        }
+      },
 
-    "Contact": {
-      "properties": {
-        "email": { "type": "string" },
-        "name": { "type": "string" },
-        "phone": { "type": "string" },
-        "favorite": { "type": "boolean" },
-        "owner": { "type": "string" }
-      }
-    },
+      "Contact": {
+        "properties": {
+          "email": { "type": "string" },
+          "name": { "type": "string" },
+          "phone": { "type": "string" },
+          "favorite": { "type": "boolean" },
+          "owner": { "type": "string" }
+        }
+      },
 
-    "ContactId": {
-      "properties": {
-        "id": { "type": "string" }
-      }
-    },
+      "ContactId": {
+        "properties": {
+          "id": { "type": "string" }
+        }
+      },
 
-    "FavoriteContact": {
-      "properties": {
-        "favorite": { "type": "boolean" }
+      "FavoriteContact": {
+        "properties": {
+          "favorite": { "type": "boolean" }
+        }
       }
     }
   }
