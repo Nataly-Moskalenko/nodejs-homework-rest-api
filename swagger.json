@@ -9,22 +9,24 @@
       "url": "https://opensource.org/licenses/MIT"
     }
   },
-  "host": "localhost:3000",
-  "basePath": "/api-docs",
+  "servers": [{ "url": "https://nodejs-rest-api-ry5x.onrender.com" }],
   "tags": [
     {
       "name": "Users",
-      "description": "API for users in the system"
+      "description": "Users endpoints"
+    },
+    {
+      "name": "Contacts",
+      "description": "Contacts endpoints"
     }
   ],
-  "schemas": ["http", "https"],
   "consumes": ["application/json"],
   "produces": ["application/json"],
   "securityDefinitions": {
-    "ApiKeyAuth": {
+    "JWT": {
       "type": "apiKey",
-      "in": "headers",
-      "name": "authorization"
+      "in": "header",
+      "name": "access_token"
     }
   },
 
@@ -40,7 +42,7 @@
             "in": "body",
             "description": "User registration",
             "schema": {
-              "$ref": "#/definitions/RegisterUser"
+              "$ref": "#/definitions/RegistrationRequest"
             }
           }
         ],
@@ -49,7 +51,7 @@
           "201": {
             "description": "User created, registration successful",
             "schema": {
-              "$ref": "#/definitions/CurrentUser"
+              "$ref": "#/definitions/RegistrationResponse"
             }
           },
           "400": {
@@ -73,7 +75,7 @@
             "in": "body",
             "description": "User login",
             "schema": {
-              "$ref": "#/definitions/CurrentUser"
+              "$ref": "#/definitions/LoginRequest"
             }
           }
         ],
@@ -82,7 +84,7 @@
           "200": {
             "description": "Login Successful",
             "schema": {
-              "$ref": "#/definitions/CurrentUser"
+              "$ref": "#/definitions/LoginResponse"
             }
           },
           "400": {
@@ -100,16 +102,8 @@
         "summary": "User logout",
         "tags": ["Users"],
         "description": "User logout",
-        "parameters": [
-          {
-            "name": "user",
-            "in": "body",
-            "description": "User logout",
-            "schema": {
-              "$ref": "#/definitions/UserId"
-            }
-          }
-        ],
+        "security": [{ "JWT": [] }],
+        "parameters": [],
         "responses": {
           "204": {
             "description": "Logout Successful, No content"
@@ -126,6 +120,7 @@
         "summary": "User verification",
         "tags": ["Users"],
         "description": "User verification",
+        "security": [{ "JWT": [] }],
         "parameters": [
           {
             "name": "user",
@@ -156,22 +151,14 @@
         "summary": "Current user",
         "tags": ["Users"],
         "description": "Current user",
-        "parameters": [
-          {
-            "name": "user",
-            "in": "body",
-            "description": "Current user",
-            "schema": {
-              "$ref": "#/definitions/CurrentUser"
-            }
-          }
-        ],
+        "security": [{ "JWT": [] }],
+        "parameters": [],
         "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "Get current user successful",
             "schema": {
-              "$ref": "#/definitions/CurrentUser"
+              "$ref": "#/definitions/CurrentUserResponse"
             }
           },
           "401": {
@@ -186,13 +173,14 @@
         "summary": "Subscription updating",
         "tags": ["Users"],
         "description": "Subscription updating",
+        "security": [{ "JWT": [] }],
         "parameters": [
           {
             "name": "user",
             "in": "body",
             "description": "Subscription updating",
             "schema": {
-              "$ref": "#/definitions/UserId"
+              "$ref": "#/definitions/UpdateSubscriptionRequest"
             }
           }
         ],
@@ -201,7 +189,7 @@
           "200": {
             "description": "Subscription updated successful",
             "schema": {
-              "$ref": "#/definitions/UpdateSubscription"
+              "$ref": "#/definitions/UpdateSubscriptionResponse"
             }
           },
           "404": {
@@ -216,13 +204,14 @@
         "summary": "Avatar updating",
         "tags": ["Users"],
         "description": "Avatar updating",
+        "security": [{ "JWT": [] }],
         "parameters": [
           {
             "name": "user",
             "in": "body",
             "description": "Avatar updating",
             "schema": {
-              "$ref": "#/definitions/UserId"
+              "$ref": "#/definitions/UpdateAvatarRequest"
             }
           }
         ],
@@ -231,7 +220,7 @@
           "200": {
             "description": "Avatar updated successful",
             "schema": {
-              "$ref": "#/definitions/UpdateAvatar"
+              "$ref": "#/definitions/UpdateAvatarRequest"
             }
           },
           "404": {
@@ -241,21 +230,13 @@
       }
     },
 
-    "/api/contacts/": {
+    "/api/contacts": {
       "get": {
         "summary": "Get all contacts",
         "tags": ["Contacts"],
         "description": "All contacts",
-        "parameters": [
-          {
-            "name": "contact",
-            "in": "body",
-            "description": "All contacts",
-            "schema": {
-              "$ref": "#/definitions/Contact"
-            }
-          }
-        ],
+        "security": [{ "JWT": [] }],
+        "parameters": [],
         "produces": ["application/json"],
         "responses": {
           "200": {
@@ -271,47 +252,12 @@
             "description": "Not found"
           }
         }
-      }
-    },
-
-    "/api/contacts/:contactId/": {
-      "get": {
-        "summary": "Get contact by Id",
-        "tags": ["Contacts"],
-        "description": "Get contact by Id",
-        "parameters": [
-          {
-            "name": "contact",
-            "in": "body",
-            "description": "Get contact by Id",
-            "schema": {
-              "$ref": "#/definitions/ContactId"
-            }
-          }
-        ],
-        "produces": ["application/json"],
-        "responses": {
-          "200": {
-            "description": "All contacts",
-            "schema": {
-              "$ref": "#/definitions/Contact"
-            }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "404": {
-            "description": "Not found"
-          }
-        }
-      }
-    },
-
-    "/api/contacts": {
+      },
       "post": {
         "summary": "Add contact",
         "tags": ["Contacts"],
         "description": "Add contact",
+        "security": [{ "JWT": [] }],
         "parameters": [
           {
             "name": "contact",
@@ -329,35 +275,6 @@
             "schema": {
               "$ref": "#/definitions/Contact"
             }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "404": {
-            "description": "Not found"
-          }
-        }
-      }
-    },
-
-    "/api/contacts/:contactID": {
-      "delete": {
-        "summary": "Delete contact",
-        "tags": ["Contacts"],
-        "description": "Delete contact",
-        "parameters": [
-          {
-            "name": "contact",
-            "in": "body",
-            "description": "Delete contact",
-            "schema": {
-              "$ref": "#/definitions/ContactId"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Contact deleted"
           },
           "400": {
             "description": "Bad request"
@@ -370,10 +287,51 @@
     },
 
     "/api/contacts/:contactId": {
+      "get": {
+        "summary": "Get contact by Id",
+        "tags": ["Contacts"],
+        "description": "Get contact by Id",
+        "security": [{ "JWT": [] }],
+        "parameters": [],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "All contacts",
+            "schema": {
+              "$ref": "#/definitions/Contact"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete contact",
+        "tags": ["Contacts"],
+        "description": "Delete contact",
+        "security": [{ "JWT": [] }],
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Contact deleted"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
       "put": {
         "summary": "Update contact",
         "tags": ["Contacts"],
         "description": "Update contact",
+        "security": [{ "JWT": [] }],
         "parameters": [
           {
             "name": "contact",
@@ -407,6 +365,7 @@
         "summary": "Update status contact",
         "tags": ["Contacts"],
         "description": "Update status contact",
+        "security": [{ "JWT": [] }],
         "parameters": [
           {
             "name": "contact",
@@ -445,6 +404,141 @@
         "verify": { "type": "string" },
         "verificationToken": { "type": "string" },
         "avatarURL": { "type": "string" }
+      }
+    },
+
+    "RegistrationRequest": {
+      "type": "object",
+      "required": ["name", "email", "password"],
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "User's email. It must contain only Latin letters; may include numbers, letters in different case",
+          "format": "email",
+          "example": "mango@email.com"
+        },
+        "password": {
+          "type": "string",
+          "description": "User's password. It must contain only Latin letters; may contain numbers, signs, letters in different case; does not contain a space.",
+          "example": "Mango12378"
+        }
+      }
+    },
+    "RegistrationResponse": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "User's email",
+          "format": "email",
+          "example": "mango@email.com"
+        },
+        "subscription": {
+          "type": "string",
+          "description": "User's subscription",
+          "example": "starter"
+        }
+      }
+    },
+    "LoginRequest": {
+      "type": "object",
+      "required": ["email", "password"],
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "User's email.  It must contain only Latin letters; may include numbers, letters in different case",
+          "format": "email",
+          "example": "mango@email.com"
+        },
+        "password": {
+          "type": "string",
+          "description": "User's password. It must contain only Latin letters, at least one uppercase, lowercase letter and a number; does not contain a space",
+          "example": "Mango12378"
+        }
+      }
+    },
+    "LoginResponse": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string",
+          "description": "User's token",
+          "format": "Bearer Token"
+        },
+        "user": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email",
+              "example": "mango@email.com"
+            },
+            "subscription": {
+              "type": "string",
+              "description": "User's subscription",
+              "example": "starter"
+            }
+          }
+        }
+      }
+    },
+    "CurrentUserResponse": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "User's email",
+          "format": "email",
+          "example": "mango@email.com"
+        },
+        "subscription": {
+          "type": "string",
+          "description": "User's subscription",
+          "example": "starter"
+        }
+      }
+    },
+    "UpdateSubscriptionRequest": {
+      "type": "object",
+      "required": ["subscription"],
+      "properties": {
+        "subscription": {
+          "type": "string",
+          "description": "User's subscription. Subscription field must be one of the next value - starter, pro or business",
+          "enum": ["starter", "pro", "business"],
+          "example": "pro"
+        }
+      }
+    },
+    "UpdateSubscriptionResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "User's subscription",
+          "example": "pro"
+        }
+      }
+    },
+    "UpdateAvatarRequest": {
+      "type": "object",
+      "required": ["avatarURL"],
+      "properties": {
+        "avatarURL": {
+          "type": "string",
+          "description": "User's avatar"
+        }
+      }
+    },
+    "UpdateAvatarResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "User's avatar",
+          "example": "Avatar changed"
+        }
       }
     },
 
