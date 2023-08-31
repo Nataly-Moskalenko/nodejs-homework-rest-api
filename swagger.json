@@ -22,7 +22,7 @@
       "description": "Contacts endpoints"
     }
   ],
-  
+
   "paths": {
     "/api/users/register": {
       "post": {
@@ -40,7 +40,7 @@
               }
             }
           }
-        },       
+        },
         "responses": {
           "201": {
             "description": "User created, registration successful",
@@ -55,7 +55,7 @@
           "400": {
             "description": "Bad request (invalid request body)",
             "content": {}
-          },          
+          },
           "409": {
             "description": "Conflict (Provided email already exists)",
             "content": {}
@@ -119,10 +119,14 @@
           "401": {
             "description": "Not authorized",
             "content": {}
+          },
+          "404": {
+            "description": "Not found",
+            "content": {}
           }
         }
       }
-    },    
+    },
 
     "/api/users/current": {
       "get": {
@@ -131,7 +135,6 @@
         "description": "Current user",
         "security": [{ "Bearer": [] }],
         "parameters": [],
-        "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "Get current user successful",
@@ -141,10 +144,14 @@
                   "$ref": "#/components/schemas/CurrentUserResponse"
                 }
               }
-            }            
+            }
           },
           "401": {
             "description": "Not authorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found",
             "content": {}
           }
         }
@@ -178,10 +185,18 @@
                   "$ref": "#/components/schemas/UpdateSubscriptionResponse"
                 }
               }
-            }            
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {}
           },
           "404": {
-            "description": "User not found",
+            "description": "Not found",
             "content": {}
           }
         }
@@ -217,8 +232,16 @@
               }
             }
           },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {}
+          },
           "404": {
-            "description": "User not found",
+            "description": "Not found",
             "content": {}
           }
         }
@@ -231,20 +254,24 @@
         "tags": ["Contacts"],
         "description": "All contacts",
         "security": [{ "Bearer": [] }],
-        "parameters": [],        
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "All contacts",
+            "description": "Get all contacts successful",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Contact"
+                  "$ref": "#/components/schemas/AllContactsresponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
             "content": {}
           },
           "404": {
@@ -265,24 +292,28 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Contact"
+                "$ref": "#/components/schemas/AddContactRequest"
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "Add contact",
+          "201": {
+            "description": "Contact added successful",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Contact"
+                  "$ref": "#/components/schemas/AddContactResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
             "content": {}
           },
           "404": {
@@ -299,20 +330,24 @@
         "tags": ["Contacts"],
         "description": "Get contact by Id",
         "security": [{ "Bearer": [] }],
-        "parameters": [],       
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "All contacts",
+            "description": "Get contact by Id successful",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Contact"
+                  "$ref": "#/components/schemas/GetContactByIdResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
             "content": {}
           },
           "404": {
@@ -329,11 +364,14 @@
         "parameters": [],
         "responses": {
           "204": {
-            "description": "Contact deleted",
-            "content": {}
+            "description": "Contact deleted, no content"
           },
           "400": {
             "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
             "content": {}
           },
           "404": {
@@ -354,24 +392,28 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Contact"
+                "$ref": "#/components/schemas/UpdateContactRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Update contact",
+            "description": "Contact updated",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Contact"
+                  "$ref": "#/components/schemas/UpdateContactResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
             "content": {}
           },
           "404": {
@@ -395,24 +437,28 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Contact"
+                "$ref": "#/components/schemas/UpdateStatusContactRequest"
               }
             }
           }
-        },        
+        },
         "responses": {
           "200": {
-            "description": "Update status contact",
+            "description": "Status contact updated",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Contact"
+                  "$ref": "#/components/schemas/UpdateStatusContactResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
             "content": {}
           },
           "404": {
@@ -433,31 +479,20 @@
       }
     },
     "schemas": {
-      "User": {
-        "properties": {
-          "email": { "type": "string" },
-          "password": { "type": "string" },
-          "subscription": { "type": "string" },
-          "verify": { "type": "string" },
-          "verificationToken": { "type": "string" },
-          "avatarURL": { "type": "string" }
-        }
-      },
-
       "RegistrationRequest": {
         "type": "object",
         "required": ["name", "email", "password"],
         "properties": {
           "email": {
             "type": "string",
-            "description": "User's email. It must contain only Latin letters; may include numbers, letters in different case",
+            "description": "User's email.",
             "format": "email",
             "example": "mango@email.com"
           },
           "password": {
             "type": "string",
-            "description": "User's password. It must contain only Latin letters; may contain numbers, signs, letters in different case; does not contain a space.",
-            "example": "Mango12378"
+            "description": "User's password.",
+            "example": "Mango12345"
           }
         }
       },
@@ -472,8 +507,9 @@
           },
           "subscription": {
             "type": "string",
-            "description": "User's subscription",
-            "example": "starter"
+            "description": "User's subscription. Subscription field must be one of the next value - starter, pro or business",
+            "enum": ["starter", "pro", "business"],
+            "example": "pro"
           }
         }
       },
@@ -483,13 +519,13 @@
         "properties": {
           "email": {
             "type": "string",
-            "description": "User's email.  It must contain only Latin letters; may include numbers, letters in different case",
+            "description": "User's email.",
             "format": "email",
             "example": "zirdekoltu@gufum.com"
           },
           "password": {
             "type": "string",
-            "description": "User's password. It must contain only Latin letters, at least one uppercase, lowercase letter and a number; does not contain a space",
+            "description": "User's password.",
             "example": "krasota"
           }
         }
@@ -497,7 +533,7 @@
       "LoginResponse": {
         "type": "object",
         "properties": {
-          "accessToken": {
+          "token": {
             "type": "string",
             "description": "User's token",
             "format": "Bearer Token"
@@ -509,12 +545,13 @@
                 "type": "string",
                 "description": "User's email",
                 "format": "email",
-                "example": "mango@email.com"
+                "example": "zirdekoltu@gufum.com"
               },
               "subscription": {
                 "type": "string",
-                "description": "User's subscription",
-                "example": "starter"
+                "description": "User's subscription. Subscription field must be one of the next value - starter, pro or business",
+                "enum": ["starter", "pro", "business"],
+                "example": "pro"
               }
             }
           }
@@ -527,12 +564,13 @@
             "type": "string",
             "description": "User's email",
             "format": "email",
-            "example": "mango@email.com"
+            "example": "zirdekoltu@gufum.com"
           },
           "subscription": {
             "type": "string",
-            "description": "User's subscription",
-            "example": "starter"
+            "description": "User's subscription. Subscription field must be one of the next value - starter, pro or business",
+            "enum": ["starter", "pro", "business"],
+            "example": "pro"
           }
         }
       },
@@ -551,9 +589,10 @@
       "UpdateSubscriptionResponse": {
         "type": "object",
         "properties": {
-          "message": {
+          "subscription": {
             "type": "string",
-            "description": "User's subscription",
+            "description": "User's subscription. Subscription field must be one of the next value - starter, pro or business",
+            "enum": ["starter", "pro", "business"],
             "example": "pro"
           }
         }
@@ -571,74 +610,239 @@
       "UpdateAvatarResponse": {
         "type": "object",
         "properties": {
-          "message": {
+          "avatarURL": {
             "type": "string",
-            "description": "User's avatar",
-            "example": "Avatar changed"
+            "description": "User's avatar"
           }
         }
       },
 
-      "RegisterUser": {
-        "properties": {
-          "email": { "type": "string" },
-          "password": { "type": "string" },
-          "subscription": { "type": "string" }
+      "AllContactsresponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "Contact email",
+              "format": "email",
+              "example": "kiwi@mail.com"
+            },
+            "name": {
+              "type": "string",
+              "description": "Contact name",
+              "example": "Kiwi"
+            },
+            "phone": {
+              "type": "string",
+              "description": "Contact phone",
+              "example": "1234567"
+            },
+            "favorite": {
+              "type": "boolean",
+              "description": "favorite contact",
+              "example": "false"
+            },
+            "owner": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "User id",
+                  "example": "64afb6371919ee3f3a63fbc7"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "User email",
+                  "format": "email",
+                  "example": "zirdekoltu@gufum.com"
+                }
+              }
+            }
+          }
         }
       },
-
-      "CurrentUser": {
+      "AddContactRequest": {
+        "type": "object",
+        "required": ["name", "email", "phone"],
         "properties": {
-          "email": { "type": "string" },
-          "subscription": { "type": "string" }
+          "email": {
+            "type": "string",
+            "description": "Contact email",
+            "format": "email",
+            "example": "kiwi@mail.com"
+          },
+          "name": {
+            "type": "string",
+            "description": "Contact name",
+            "example": "Kiwi"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Contact phone",
+            "example": "1234567"
+          },
+          "favorite": {
+            "type": "boolean",
+            "description": "Favorite contact",
+            "example": "false"
+          }
         }
       },
-
-      "UpdateSubscription": {
+      "AddContactResponse": {
+        "type": "object",
         "properties": {
-          "_id": { "type": "string" },
-          "subscription": { "type": "string" }
+          "email": {
+            "type": "string",
+            "description": "Contact email",
+            "format": "email",
+            "example": "kiwi@mail.com"
+          },
+          "name": {
+            "type": "string",
+            "description": "Contact name",
+            "example": "Kiwi"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Contact phone",
+            "example": "1234567"
+          },
+          "favorite": {
+            "type": "boolean",
+            "description": "Favorite contact",
+            "example": "false"
+          },
+          "owner": {
+            "type": "string",
+            "description": "User id",
+            "example": "64afb6371919ee3f3a63fbc7"
+          },
+          "_id": {
+            "type": "string",
+            "description": "Contact id",
+            "example": "64f06b088b6dd050acd85660"
+          }          
         }
       },
-
-      "UpdateAvatar": {
+      "GetContactByIdResponse": {
+        "type": "object",
         "properties": {
-          "_id": { "type": "string" },
-          "avatarURL": { "type": "string" }
+          "email": {
+            "type": "string",
+            "description": "Contact email",
+            "format": "email",
+            "example": "kiwi@mail.com"
+          },
+          "name": {
+            "type": "string",
+            "description": "Contact name",
+            "example": "Kiwi"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Contact phone",
+            "example": "1234567"
+          },
+          "favorite": {
+            "type": "boolean",
+            "description": "Favorite contact",
+            "example": "false"
+          },
+          "owner": {
+            "type": "string",
+            "description": "User id",
+            "example": "64afb6371919ee3f3a63fbc7"
+          },
+          "_id": {
+            "type": "string",
+            "description": "Contact id",
+            "example": "64f06b088b6dd050acd85660"
+          }  
         }
       },
-
-      "UserId": {
+      "UpdateContactRequest": {
+        "type": "object",
+        "required": ["name", "email", "phone"],
         "properties": {
-          "_id": { "type": "string" }
+          "email": {
+            "type": "string",
+            "description": "Contact email",
+            "format": "email",
+            "example": "kiwi@mail.com"
+          },
+          "name": {
+            "type": "string",
+            "description": "Contact name",
+            "example": "Kiwi"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Contact phone",
+            "example": "1234567"
+          },
+          "favorite": {
+            "type": "boolean",
+            "description": "Favorite contact",
+            "example": "false"
+          }
         }
       },
-
-      "Verify": {
+      "UpdateContactResponse": {
+        "type": "object",
         "properties": {
-          "verificationToken": { "type": "string" }
+          "email": {
+            "type": "string",
+            "description": "Contact email",
+            "format": "email",
+            "example": "kiwi@mail.com"
+          },
+          "name": {
+            "type": "string",
+            "description": "Contact name",
+            "example": "Kiwi"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Contact phone",
+            "example": "1234567"
+          },
+          "favorite": {
+            "type": "boolean",
+            "description": "Favorite contact",
+            "example": "false"
+          },
+          "owner": {
+            "type": "string",
+            "description": "User id",
+            "example": "64afb6371919ee3f3a63fbc7"
+          },
+          "_id": {
+            "type": "string",
+            "description": "Contact id",
+            "example": "64f06b088b6dd050acd85660"
+          }  
         }
       },
-
-      "Contact": {
+      "UpdateStatusContactRequest": {
+        "type": "object",
+        "required": ["favorite"],
         "properties": {
-          "email": { "type": "string" },
-          "name": { "type": "string" },
-          "phone": { "type": "string" },
-          "favorite": { "type": "boolean" },
-          "owner": { "type": "string" }
+          "favorite": {
+            "type": "boolean",
+            "description": "Favorite contact",
+            "example": "true"
+          }
         }
       },
-
-      "ContactId": {
+      "UpdateStatusContactResponse": {
+        "type": "object",
         "properties": {
-          "id": { "type": "string" }
-        }
-      },
-
-      "FavoriteContact": {
-        "properties": {
-          "favorite": { "type": "boolean" }
+          "favorite": {
+            "type": "boolean",
+            "description": "Favorite contact",
+            "example": "true"
+          }
         }
       }
     }
